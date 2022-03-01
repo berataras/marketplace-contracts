@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 contract Market is IERC721Receiver {
+    uint256 public price = 1 ether;
+
     enum ListingStatus {
         Active,
         Sold,
@@ -117,13 +119,16 @@ contract Market is IERC721Receiver {
         emit Cancel(listingID, listing.seller);
     }
 
+    function setPrice(uint256 _newPrice) public onlyOwner {
+        price = _newPrice;
+    }
+
     function onERC721Received(
         address operator,
         address,
         uint256 tokenId,
-        bytes calldata      
+        bytes calldata
     ) external override returns (bytes4) {
-        uint256 price = 1 * (10**18);
         Listing memory listing = Listing(
             ListingStatus.Active,
             operator,
@@ -136,7 +141,7 @@ contract Market is IERC721Receiver {
         _listings[_listingID] = listing;
 
         emit Listed(_listingID, operator, msg.sender, tokenId, price);
-        
+
         return this.onERC721Received.selector;
     }
 }
