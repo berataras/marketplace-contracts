@@ -2,8 +2,9 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
-contract Market {
+contract Market is IERC721Receiver {
     enum ListingStatus {
         Active,
         Sold,
@@ -114,5 +115,28 @@ contract Market {
         );
 
         emit Cancel(listingID, listing.seller);
+    }
+
+    function onERC721Received(
+        address operator,
+        address,
+        uint256 tokenId,
+        bytes calldata      
+    ) external override returns (bytes4) {
+        uint256 price = 1 * (10**18);
+        Listing memory listing = Listing(
+            ListingStatus.Active,
+            operator,
+            msg.sender,
+            tokenId,
+            price
+        );
+
+        _listingID++;
+        _listings[_listingID] = listing;
+
+        emit Listed(_listingID, operator, msg.sender, tokenId, price);
+        
+        return this.onERC721Received.selector;
     }
 }
