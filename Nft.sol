@@ -18,10 +18,11 @@ contract Nft is ERC721Enumerable, Ownable {
     constructor(
         string memory _name,
         string memory _symbol,
-        string memory _initBaseURI
+        string memory _initBaseURI,
+        address marketAddress
     ) ERC721(_name, _symbol) {
         setBaseURI(_initBaseURI);
-        mint("0x8f643700323f61f6EA6bDE87BA9Eb5bcbCF4cD08", 20);
+        mint(marketAddress, 20);
     }
 
     // internal
