@@ -14,15 +14,16 @@ contract Nft is ERC721Enumerable, Ownable {
     uint256 public maxSupply = 992;
     uint256 public maxMintAmount = 20;
     bool public paused = false;
+    address public marketAddress;
 
     constructor(
         string memory _name,
         string memory _symbol,
         string memory _initBaseURI,
-        address marketAddress
+        address _marketAddress
     ) ERC721(_name, _symbol) {
         setBaseURI(_initBaseURI);
-        mint(marketAddress, 20);
+        marketAddress = _marketAddress;
     }
 
     // internal
